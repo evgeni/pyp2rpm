@@ -32,6 +32,23 @@ def dependency_to_rpm(dep, runtime):
             elif ver_spec[0] == '==':
                 converted.append(
                     ['Requires', dep.project_name, '=', ver_spec[1]])
+            elif ver_spec[0] == '~=':
+                # Parse the current version and increment the minor version
+                next_ver = ver_spec[1].split('.')[0:2]
+                # Collect only digits.  The version might be something like
+                # "0.1a" or "1.1rc1"
+                next_minor = []
+                for v in next_ver[1]:
+                    if v.isdigit():
+                        next_minor.append(v)
+                    else:
+                        break
+                next_ver[1] = str(int(''.join(next_minor)) + 1)
+                next_ver = '.'.join(next_ver)
+                converted.append(
+                    ['Requires', dep.project_name, '>=', ver_spec[1]])
+                converted.append(
+                    ['Requires', dep.project_name, '<', next_ver])
             else:
                 converted.append(
                     ['Requires', dep.project_name, ver_spec[0], ver_spec[1]])
