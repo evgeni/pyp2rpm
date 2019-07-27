@@ -20,6 +20,12 @@ class TestDependencyParser():
           ['BuildConflicts', 'pytest', '=', '1']
           ]
          ),
+        ('pulpcoreplugin~=0.1rc2', True,
+         [['Requires', 'pulpcoreplugin', '>=', '0.1rc2', '<', '0.2']]
+         ),
+        ('pulpcoreplugin~=0.9.3', True,
+         [['Requires', 'pulpcoreplugin', '>=', '0.9.3', '<', '0.10']]
+         ),
 
     ])
     def test_dependency_to_rpm(self, d, r, expected):

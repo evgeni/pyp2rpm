@@ -281,7 +281,8 @@ class TestSetupPyMetadataExtractor(object):
         for archive in ('plumbum-0.9.0.tar.gz',
                         'pytest-2.2.3.zip',
                         'simpleeval-0.8.7.tar.gz',
-                        'coverage_pth-0.0.1.tar.gz'):
+                        'coverage_pth-0.0.1.tar.gz',
+                        'pulpfile-0.1.0.tar.gz'):
             name, version = archive.split('-')
             self.e.append(me.SetupPyMetadataExtractor('{0}{1}'.format(
                 self.td_dir, archive), name, self.nc, version[:5]))
@@ -327,6 +328,9 @@ class TestSetupPyMetadataExtractor(object):
         (2, 'py_modules', ['simpleeval']),
         (3, 'runtime_deps', [['Requires', 'python-coverage']]),
         (3, 'python_versions', []),
+        (4, 'runtime_deps', [['Requires', 'python-pulpcore-plugin',
+                              '>=', '0.1rc2', '<', '0.2'],
+                             ['Requires', 'python-setuptools']]),
     ])
     def test_extract(self, i, what, expected):
         data = self.e[i].extract_data()
