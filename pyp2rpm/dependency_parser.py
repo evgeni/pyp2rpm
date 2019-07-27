@@ -46,9 +46,8 @@ def dependency_to_rpm(dep, runtime):
                 next_ver[1] = str(int(''.join(next_minor)) + 1)
                 next_ver = '.'.join(next_ver)
                 converted.append(
-                    ['Requires', dep.project_name, '>=', ver_spec[1]])
-                converted.append(
-                    ['Requires', dep.project_name, '<', next_ver])
+                    ['Requires', dep.project_name, '>=', ver_spec[1],
+                     '<', next_ver])
             else:
                 converted.append(
                     ['Requires', dep.project_name, ver_spec[0], ver_spec[1]])
