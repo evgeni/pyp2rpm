@@ -124,6 +124,27 @@ class Convertor(object):
         data.base_python_version = base_version
         data.python_versions = additional_versions
 
+    def rich_dep_downgrade(self, data):
+        rich_dep_blacklist = settings.RPM_RICH_DEP_BLACKLIST
+        if self.distro in rich_dep_blacklist:
+            new_deps = []
+            for dep in data.runtime_deps:
+                if len(dep) > 4:
+                    new_deps.append(['Requires', dep[1], dep[2], dep[3]])
+                    new_deps.append(['Conflicts', dep[1], '>=', dep[5]])
+                else:
+                    new_deps.append(dep)
+            data.runtime_deps = new_deps
+            new_deps = []
+            for dep in data.build_deps:
+                if len(dep) > 4:
+                    new_deps.append(['Requires', dep[1], dep[2], dep[3]])
+                    new_deps.append(['Conflicts', dep[1], '>=', dep[5]])
+                else:
+                    new_deps.append(dep)
+            data.build_deps = new_deps
+
+
     def convert(self):
         """Returns RPM SPECFILE.
         Returns:
@@ -147,6 +168,7 @@ class Convertor(object):
         logger.debug("Extracted metadata:")
         logger.debug(pprint.pformat(data.data))
         self.merge_versions(data)
+        self.rich_dep_downgrade(data)
 
         jinja_env = jinja2.Environment(loader=jinja2.ChoiceLoader([
             jinja2.FileSystemLoader(['/']),

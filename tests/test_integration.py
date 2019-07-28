@@ -43,6 +43,8 @@ class TestSpec(object):
         ('Sphinx', '-v1.5 -r python-sphinx -p2', 'python-sphinx_autonc.spec'),
         ('{0}/test_data/pulpfile-0.1.0.tar.gz'.format(tests_dir), '',
          'python-pulpfile.spec'),
+        ('{0}/test_data/pulpfile-0.1.0.tar.gz'.format(tests_dir), '-t epel7',
+         'python-pulpfile_epel7.spec'),
     ])
     @pytest.mark.webtest
     def test_spec(self, package, options, expected):
