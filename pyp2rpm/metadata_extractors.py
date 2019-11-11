@@ -178,6 +178,7 @@ class LocalMetadataExtractor(object):
 
     def __init__(self, local_file, name, name_convertor, version,
                  rpm_name=None, venv=True, skip_check=False,
+                 include_extras_require=True,
                  base_python_version=None,
                  metadata_extension=False):
         self.local_file = local_file
@@ -188,6 +189,7 @@ class LocalMetadataExtractor(object):
         self.rpm_name = rpm_name
         self.venv = venv
         self.skip_check = skip_check
+        self.include_extras_require = include_extras_require
         self.base_python_version = base_python_version
         self.metadata_extension = metadata_extension
         self.unsupported_version = None
@@ -383,6 +385,10 @@ class SetupPyMetadataExtractor(LocalMetadataExtractor):
             list of runtime dependencies of the package
         """
         install_requires = self.metadata['install_requires']
+
+        if self.include_extras_require:
+            install_requires += self.metadata['install_requires_extras']
+
         if self.metadata[
                 'entry_points'] and 'setuptools' not in install_requires:
             install_requires.append('setuptools')  # entrypoints
@@ -407,6 +413,10 @@ class SetupPyMetadataExtractor(LocalMetadataExtractor):
 
         if 'setuptools' not in build_requires:
             build_requires.append('setuptools')
+
+        if self.include_extras_require:
+            build_requires += self.metadata['setup_requires_extras']
+
         return sorted(self.name_convert_deps_list(deps_from_pyp_format(
             build_requires, runtime=False)))
 
@@ -566,6 +576,9 @@ class WheelMetadataExtractor(LocalMetadataExtractor):
         run_requires = self.get_requires(['run_requires', 'meta_requires'])
         if 'setuptools' not in run_requires:
             run_requires.append('setuptools')
+        if self.include_extras_require:
+            install_requires += self.metadata['install_requires_extras']
+
         return self.name_convert_deps_list(deps_from_pydit_json(run_requires))
 
     @property
@@ -576,6 +589,8 @@ class WheelMetadataExtractor(LocalMetadataExtractor):
                 'test_requires', 'run_requires'])
         if 'setuptools' not in build_requires:
             build_requires.append('setuptools')
+        if self.include_extras_require:
+            build_requires += self.metadata['setup_requires_extras']
         return self.name_convert_deps_list(deps_from_pydit_json(
             build_requires, runtime=False))
 
