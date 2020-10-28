@@ -46,7 +46,8 @@ class Convertor(object):
                  base_python_version=settings.DEFAULT_PYTHON_VERSION,
                  python_versions=[],
                  rpm_name=None, proxy=None, venv=True, autonc=False,
-                 skip_check=False):
+                 skip_check=False,
+                 include_extras=True):
         self.package = package
         self.version = version
         self.prerelease = prerelease
@@ -62,6 +63,7 @@ class Convertor(object):
         self.venv = venv
         self.autonc = autonc
         self.skip_check = skip_check
+        self.include_extras = include_extras
         self.pypi = True
         suffix = os.path.splitext(self.package)[1]
         if (os.path.exists(self.package)
@@ -278,6 +280,7 @@ class Convertor(object):
                 self.venv,
                 self.distro,
                 self.skip_check,
+                self.include_extras,
                 base_python_version)
 
         return self._metadata_extractor
