@@ -217,11 +217,8 @@ def main(package, v, prerelease, d, s, r, proxy, srpm, skip_check, p, b, o, t, v
                           proxy=proxy,
                           venv=venv,
                           autonc=autonc,
-<<<<<<< HEAD
-                          skip_check=skip_check)
-=======
+                          skip_check=skip_check,
                           include_extras=include_extras)
->>>>>>> include_extras
 
     logger.debug(
         'Convertor: {0} created. Trying to convert.'.format(convertor))
